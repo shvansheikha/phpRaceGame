@@ -1,0 +1,2 @@
+**Project Brief**:  
+Develop a CLI-based two-player racing game in PHP. The game begins with the players choosing a vehicle from a list provided in a `vehicles.json` file. Each vehicle has a maximum speed. The application will calculate the time taken by each vehicle to complete a given distance based on its speed, and then declare the winner.
