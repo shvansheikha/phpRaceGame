@@ -7,7 +7,7 @@ a CLI-based two-player racing game in PHP. The game begins with the players choo
     composer install
 ```
 
-**Run**
+**Run on command line**
 ```php
 php src/index.php
 ```
