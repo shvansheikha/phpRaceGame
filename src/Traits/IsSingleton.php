@@ -1,6 +1,6 @@
 <?php
 
-namespace traits;
+namespace App\Traits;
 
 trait IsSingleton
 {

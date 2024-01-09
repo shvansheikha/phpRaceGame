@@ -1,8 +1,8 @@
 <?php
 
-namespace Utilities;
+namespace App\Utilities;
 
-use traits\IsSingleton;
+use App\Traits\IsSingleton;
 
 class JsonReader
 {

@@ -2,7 +2,7 @@
     "name": "shvanasheikha/race-game",
     "autoload": {
         "psr-4": {
-            "Shvanasheikha\\RaceGame\\": "src/"
+            "App\\": "src/"
         }
     },
     "authors": [
