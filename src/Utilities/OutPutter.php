@@ -14,8 +14,13 @@ class OutPutter
         cli\line($msg);
     }
 
-    public function prompt($message)
+    public function prompt($message, $default = false, $marker = ':'): string
     {
-        cli\prompt($message, $default = false, $marker = ':');
+        return cli\prompt($message, default: $default, marker: $marker);
+    }
+
+    public function choose($question, $choice = false, $default = 'n'): string
+    {
+        return cli\choose(question: $question, choice: $choice, default: $default);
     }
 }
