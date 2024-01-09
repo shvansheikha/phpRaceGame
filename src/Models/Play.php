@@ -18,7 +18,6 @@ class Play
     {
         $this->players[] = new Player("Player One");
         $this->players[] = new Player("Player Two");
-        $this->players[] = new Player("Player Three");
 
         $this->calculator = new Calculator();
         $this->outPutter = OutPutter::getInstance();
