@@ -8,19 +8,17 @@ use App\Utilities\Strings;
 
 class Play
 {
-    private Player $playerOne;
-    private Player $playerTwo;
+    private array $players = [];
+
     private OutPutter $outPutter;
     private Vehicles $vehicleModel;
     private Calculator $calculator;
 
     public function __construct()
     {
-        $this->playerOne = new Player();
-        $this->playerTwo = new Player();
-
-        $this->playerOne->name = "Player One";
-        $this->playerTwo->name = "Player Two";
+        $this->players[] = new Player("Player One");
+        $this->players[] = new Player("Player Two");
+        $this->players[] = new Player("Player Three");
 
         $this->calculator = new Calculator();
         $this->outPutter = OutPutter::getInstance();
@@ -32,42 +30,45 @@ class Play
         $continue = true;
 
         while ($continue) {
-            $this->printVehicleList($this->vehicleModel->getVehicles());
+            $this->printVehicleList();
 
-            $this->playerOne->vehicle = $this->getVehicle($this->outPutter, $this->vehicleModel);
-            $this->playerTwo->vehicle = $this->getVehicle($this->outPutter, $this->vehicleModel);
+            foreach ($this->players as $player) {
+                $player->vehicle = $this->getVehicle($player->name);
+            }
 
             $distance = $this->outPutter->prompt(Strings::$QUESTION_INPUT_DISTANCE);
 
-            $this->playerOne->arrivalTime = $this->calculator->calculateTime($this->playerOne->vehicle, $distance);
-            $this->playerTwo->arrivalTime = $this->calculator->calculateTime($this->playerTwo->vehicle, $distance);
+            foreach ($this->players as $player) {
+                $player->arrivalTime = $this->calculator->calculateTime($player->vehicle, $distance);
+            }
 
             $winner = $this->getWinnerPlayer();
 
             $this->outPutter->line(sprintf(Strings::$SHOW_WINNER_MESSAGE, $winner));
 
-            $this->printPlayerTime($this->playerOne);
-            $this->printPlayerTime($this->playerTwo);
+            foreach ($this->players as $player) {
+                $this->printPlayerTime($player);
+            }
 
             $continue = $this->askPlayAgain($this->outPutter);
         }
     }
 
-    private function printVehicleList($vehicles): void
+    private function printVehicleList(): void
     {
-        foreach ($vehicles as $item => $vehicle) {
+        foreach ($this->vehicleModel->getVehicles() as $item => $vehicle) {
 
-            $msg = sprintf(Strings::$VEHICLES_LIST_MESSAGE, $item, $vehicle['name']);
+            $msg = sprintf(Strings::$VEHICLES_LIST_MESSAGE, $item + 1, $vehicle['name']);
 
             $this->outPutter->line($msg);
         }
     }
 
-    private function getVehicle(OutPutter $outPutter, $vehicleModel)
+    private function getVehicle($name)
     {
-        $index = $outPutter->prompt(sprintf(Strings::$QUESTION_CHOSE_MESSAGE, 'One', ($vehicleModel->size() - 1)));
+        $index = $this->outPutter->prompt(sprintf(Strings::$QUESTION_CHOSE_MESSAGE, $name, $this->vehicleModel->size()));
 
-        return $vehicleModel->getVehicle($index);
+        return $this->vehicleModel->getVehicle($index);
     }
 
     private function askPlayAgain(OutPutter $outPutter): bool
@@ -100,8 +101,14 @@ class Play
 
     public function getWinnerPlayer(): string
     {
-        return ($this->playerOne->arrivalTime->time < $this->playerTwo->arrivalTime->time) ? $this->playerOne->name : (
-        ($this->playerTwo->arrivalTime->time < $this->playerOne->arrivalTime->time) ? $this->playerTwo->name : 'No One'
-        );
+        $winningPlayer = null;
+
+        foreach ($this->players as $player) {
+            if ($winningPlayer === null || $player->arrivalTime->time < $winningPlayer->arrivalTime->time) {
+                $winningPlayer = $player;
+            }
+        }
+
+        return ($winningPlayer !== null) ? $winningPlayer->name : 'No One';
     }
 }
