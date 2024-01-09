@@ -9,7 +9,7 @@ class OutPutter
 {
     use IsSingleton;
 
-    public function line($msg)
+    public function line($msg): void
     {
         cli\line($msg);
     }
@@ -19,7 +19,7 @@ class OutPutter
         return cli\prompt($message, default: $default, marker: $marker);
     }
 
-    public function choose($question, $choice = false, $default = 'n'): string
+    public function choose($question, $choice = 'yn', $default = 'n'): string
     {
         return cli\choose(question: $question, choice: $choice, default: $default);
     }

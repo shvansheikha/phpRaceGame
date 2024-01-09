@@ -26,7 +26,7 @@ class Vehicles
         return $this->vehicles[$index];
     }
 
-    public function size()
+    public function size(): int
     {
         return count($this->vehicles);
     }
