@@ -32,7 +32,7 @@ class Play
             $this->printVehicleList();
 
             foreach ($this->players as $player) {
-                $player->vehicle = $this->getVehicle($player->name);
+                $player->vehicle = $this->choseVehicleFromInput($player->name);
             }
 
             $distance = $this->outPutter->prompt(Strings::$QUESTION_INPUT_DISTANCE);
@@ -41,12 +41,10 @@ class Play
                 $player->arrivalTime = $this->calculator->calculateTime($player->vehicle, $distance);
             }
 
-            $winner = $this->getWinnerPlayer();
-
-            $this->outPutter->line(sprintf(Strings::$SHOW_WINNER_MESSAGE, $winner));
+            $this->defineWinner();
 
             foreach ($this->players as $player) {
-                $this->printPlayerTime($player);
+                $this->printPlayerTimeOfPlayer($player);
             }
 
             $continue = $this->askPlayAgain($this->outPutter);
@@ -63,7 +61,7 @@ class Play
         }
     }
 
-    private function getVehicle($name)
+    private function choseVehicleFromInput($name)
     {
         $index = $this->outPutter->prompt(sprintf(Strings::$QUESTION_CHOSE_MESSAGE, $name, $this->vehicleModel->size()));
 
@@ -87,7 +85,7 @@ class Play
         return true;
     }
 
-    public function printPlayerTime(Player $player): void
+    public function printPlayerTimeOfPlayer(Player $player): void
     {
         $message = sprintf(Strings::$SHOW_PLAYER_TIME,
             $player->name,
@@ -109,5 +107,12 @@ class Play
         }
 
         return ($winningPlayer !== null) ? $winningPlayer->name : 'No One';
+    }
+
+    public function defineWinner(): void
+    {
+        $winner = $this->getWinnerPlayer();
+
+        $this->outPutter->line(sprintf(Strings::$SHOW_WINNER_MESSAGE, $winner));
     }
 }
